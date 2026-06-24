@@ -1,33 +1,23 @@
 import { SKY_PHASES } from './constants'
+import type { SkyPhase } from './constants'
+import { hexToOklch, mixOklch, oklchToHex } from './color'
 import type { DayTimes } from './weather'
 
 export interface SkyColors {
-  topColor: string
-  bottomColor: string
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  return [
-    parseInt(hex.slice(1, 3), 16),
-    parseInt(hex.slice(3, 5), 16),
-    parseInt(hex.slice(5, 7), 16),
-  ]
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return '#' + [r, g, b].map(c => Math.round(c).toString(16).padStart(2, '0')).join('')
+  core: string
+  mid: string
+  edge: string
 }
 
 function lerpColor(a: string, b: string, t: number): string {
-  const [ar, ag, ab] = hexToRgb(a)
-  const [br, bg, bb] = hexToRgb(b)
-  return rgbToHex(ar + (br - ar) * t, ag + (bg - ag) * t, ab + (bb - ab) * t)
+  return oklchToHex(mixOklch(hexToOklch(a), hexToOklch(b), t))
 }
 
-function lerp(phaseA: { topColor: string; bottomColor: string }, phaseB: { topColor: string; bottomColor: string }, t: number): SkyColors {
+function lerp(phaseA: SkyPhase, phaseB: SkyPhase, t: number): SkyColors {
   return {
-    topColor: lerpColor(phaseA.topColor, phaseB.topColor, t),
-    bottomColor: lerpColor(phaseA.bottomColor, phaseB.bottomColor, t),
+    core: lerpColor(phaseA.core, phaseB.core, t),
+    mid: lerpColor(phaseA.mid, phaseB.mid, t),
+    edge: lerpColor(phaseA.edge, phaseB.edge, t),
   }
 }
 
@@ -37,8 +27,8 @@ function clamp01(n: number): number {
 
 export function getSkyColors(times: DayTimes, nowMinutes: number): SkyColors {
   const { dawn, sunrise, sunset, dusk } = times
-  const dayLength = sunset - sunrise
-  const goldenHour = Math.min(dayLength * 0.08, 60)
+  // Fixed warm window on each side of sunrise/sunset, independent of day length.
+  const goldenHour = 90
 
   if (nowMinutes < dawn || nowMinutes >= dusk) {
     return SKY_PHASES.night

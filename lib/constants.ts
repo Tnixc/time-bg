@@ -1,13 +1,16 @@
 export interface SkyPhase {
-  topColor: string
-  bottomColor: string
+  core: string; // warm inner color at the horizon (radial center)
+  mid: string; // middle band
+  edge: string; // cool outer color at the top and edges
 }
 
+// Palettes are sampled from the reference sunset studies: a warm core glowing
+// at the horizon, a transitional mid band, and a cool edge fading out at the top.
 export const SKY_PHASES = {
-  night:    { topColor: '#0b0b2e', bottomColor: '#1a1a3e' },
-  dawn:     { topColor: '#2d1b4e', bottomColor: '#ff7e5f' },
-  sunrise:  { topColor: '#ff7e5f', bottomColor: '#feb47b' },
-  day:      { topColor: '#3b82f6', bottomColor: '#93c5fd' },
-  sunset:   { topColor: '#dc2626', bottomColor: '#f97316' },
-  dusk:     { topColor: '#7c2d5a', bottomColor: '#2d1b4e' },
-} as const satisfies Record<string, SkyPhase>
+  night: { core: "#1c1c44", mid: "#101030", edge: "#070716" },
+  dawn: { core: "#e8915c", mid: "#7e5f7a", edge: "#3a3463" },
+  sunrise: { core: "#fc7c4b", mid: "#FCCE90", edge: "#f9d4b9" },
+  day: { core: "#c6ecf5", mid: "#1290CF", edge: "#0561B1" },
+  sunset: { core: "#fb8f4d", mid: "#FFBF89", edge: "#8d95b9" },
+  dusk: { core: "#c96a8a", mid: "#6a3a6e", edge: "#241640" },
+} as const satisfies Record<string, SkyPhase>;

@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300')
     res.status(200).send(buffer)
   } catch {
-    const fallback = { topColor: '#3b82f6', bottomColor: '#93c5fd' }
+    const fallback = { core: '#e4f7bf', mid: '#c6ecf5', edge: '#8cc3ea' }
     if (format === 'svg') {
       const svg = generateSvg(fallback, width, height)
       res.setHeader('Content-Type', 'image/svg+xml')
