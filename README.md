@@ -2,7 +2,7 @@
 
 A serverless endpoint that renders a sky-coloured radial gradient for the
 current time of day at a given location. Colours track the sun: night, dawn,
-sunrise, day, sunset and dusk, blended perceptually in OKLCH with a warm glow
+sunrise, day, sunset and dusk, blended perceptually in OKLab with a warm glow
 radiating from the horizon and a layer of film grain.
 
 ## Day cycle
@@ -34,7 +34,7 @@ back to a clear-day gradient.
   from sunset reference studies.
 - `lib/sky-color.ts` — picks and blends phases for the current time. The warm
   sunrise/sunset window is a fixed 90 minutes on each side of the event.
-- `lib/color.ts` — OKLab/OKLCH conversions and perceptual mixing.
+- `lib/color.ts` — OKLab perceptual colour mixing (via [culori](https://culorijs.org)).
 - `lib/image.ts` — radial gradient + grain rendering (PNG and SVG).
 
 ## Development

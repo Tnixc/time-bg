@@ -1,7 +1,7 @@
-import { SKY_PHASES } from './constants'
-import type { SkyPhase } from './constants'
-import { hexToOklch, mixOklch, oklchToHex } from './color'
-import type { DayTimes } from './weather'
+import { SKY_PHASES } from './constants.js'
+import type { SkyPhase } from './constants.js'
+import { mixHex } from './color.js'
+import type { DayTimes } from './weather.js'
 
 export interface SkyColors {
   core: string
@@ -9,15 +9,11 @@ export interface SkyColors {
   edge: string
 }
 
-function lerpColor(a: string, b: string, t: number): string {
-  return oklchToHex(mixOklch(hexToOklch(a), hexToOklch(b), t))
-}
-
 function lerp(phaseA: SkyPhase, phaseB: SkyPhase, t: number): SkyColors {
   return {
-    core: lerpColor(phaseA.core, phaseB.core, t),
-    mid: lerpColor(phaseA.mid, phaseB.mid, t),
-    edge: lerpColor(phaseA.edge, phaseB.edge, t),
+    core: mixHex(phaseA.core, phaseB.core, t),
+    mid: mixHex(phaseA.mid, phaseB.mid, t),
+    edge: mixHex(phaseA.edge, phaseB.edge, t),
   }
 }
 

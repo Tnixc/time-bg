@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getWeatherData } from '../lib/weather'
-import { getSkyColors } from '../lib/sky-color'
-import { generateSvg } from '../lib/image'
-import { generatePng } from '../lib/image'
+import { getWeatherData } from '../lib/weather.js'
+import { getSkyColors } from '../lib/sky-color.js'
+import { generateSvg } from '../lib/image.js'
+import { generatePng } from '../lib/image.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const location = (req.query.location as string) || 'Waterloo+Ontario'

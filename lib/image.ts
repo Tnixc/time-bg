@@ -1,35 +1,22 @@
-import type { SkyColors } from './sky-color'
-import { hexToOklch, mixOklch, oklchToHex, oklchToRgb } from './color'
-import type { Oklch } from './color'
+import type { SkyColors } from './sky-color.js'
+import { makeRamp } from './color.js'
 
 // The glow radiates from a point centred on the bottom edge (the horizon).
 // Horizontal distance is compressed so the gradient stays vertical-dominant —
 // a tall sunset arc rather than a perfect circle — on wide canvases.
 const HORIZ_FACTOR = 0.45
-// Offset of the mid colour stop between core (0) and edge (1).
-const MID_STOP = 0.5
 // Peak-to-peak amplitude of the luminance grain.
 const GRAIN = 20
 // Resolution of the precomputed colour ramp.
 const LUT_STEPS = 1024
 
-// Sample the three-stop ramp (core -> mid -> edge) at t in [0,1], interpolating
-// perceptually in OKLCH.
-function sampleRamp(core: Oklch, mid: Oklch, edge: Oklch, t: number): Oklch {
-  return t < MID_STOP
-    ? mixOklch(core, mid, t / MID_STOP)
-    : mixOklch(mid, edge, (t - MID_STOP) / (1 - MID_STOP))
-}
-
 export function generateSvg({ core, mid, edge }: SkyColors, width = 1920, height = 1080): string {
-  const c = hexToOklch(core)
-  const m = hexToOklch(mid)
-  const e = hexToOklch(edge)
-  // Bake intermediate stops so the SVG gradient follows the OKLCH path too,
+  const ramp = makeRamp(core, mid, edge)
+  // Bake intermediate stops so the SVG gradient follows the OKLab path too,
   // rather than letting the renderer lerp in sRGB.
   const stops = Array.from({ length: 9 }, (_, k) => {
     const t = k / 8
-    return `<stop offset="${(t * 100).toFixed(1)}%" stop-color="${oklchToHex(sampleRamp(c, m, e, t))}"/>`
+    return `<stop offset="${(t * 100).toFixed(1)}%" stop-color="${ramp.hexAt(t)}"/>`
   }).join('\n      ')
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
@@ -48,15 +35,13 @@ export function generateSvg({ core, mid, edge }: SkyColors, width = 1920, height
 }
 
 export async function generatePng({ core, mid, edge }: SkyColors, width = 1920, height = 1080): Promise<Buffer> {
-  const c = hexToOklch(core)
-  const m = hexToOklch(mid)
-  const e = hexToOklch(edge)
+  const ramp = makeRamp(core, mid, edge)
 
   // Precompute the colour ramp once (perceptual conversion is the costly part);
   // the per-pixel loop is then just a table lookup plus grain.
   const lut = new Uint8Array((LUT_STEPS + 1) * 3)
   for (let k = 0; k <= LUT_STEPS; k++) {
-    const [r, g, b] = oklchToRgb(sampleRamp(c, m, e, k / LUT_STEPS))
+    const [r, g, b] = ramp.rgbAt(k / LUT_STEPS)
     lut[k * 3] = r
     lut[k * 3 + 1] = g
     lut[k * 3 + 2] = b

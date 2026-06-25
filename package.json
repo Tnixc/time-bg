@@ -2,11 +2,14 @@
   "name": "time-bg",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {},
   "dependencies": {
+    "culori": "^4.0.2",
     "sharp": "^0.33.0"
   },
   "devDependencies": {
+    "@types/culori": "^4.0.1",
     "@types/node": "^26.0.0",
     "@vercel/node": "^5.8.19",
     "vercel": "^54.15.1"

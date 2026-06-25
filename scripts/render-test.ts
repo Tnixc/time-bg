@@ -32,7 +32,7 @@ function srgbPng({ core, mid, edge }: SkyColors): Promise<Buffer> {
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
       const dx = (x - cx) * 0.45, dy = y - cy
-      let t = Math.min(1, Math.hypot(dx, dy) / radius)
+      const t = Math.min(1, Math.hypot(dx, dy) / radius)
       const [a, b, u] = t < 0.5 ? [c, m, t / 0.5] : [m, e, (t - 0.5) / 0.5]
       px[i++] = a[0] + (b[0] - a[0]) * u
       px[i++] = a[1] + (b[1] - a[1]) * u
