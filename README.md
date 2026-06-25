@@ -1,3 +1,5 @@
+# SLOP NOTICE: In case you couldn't tell, this is slop
+
 # time-bg
 
 A serverless endpoint that renders a sky-coloured radial gradient for the
@@ -15,7 +17,7 @@ sunset 19:30). Regenerate with the preview script below.
 ## Usage
 
 ```
-GET /api/sky?location=Waterloo+Ontario&format=png&width=1920&height=1080
+GET https://time-bg.vercel.app/api/sky?location=Waterloo+Ontario&format=png&width=1920&height=1080
 ```
 
 | Param      | Default            | Notes                          |
