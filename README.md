@@ -9,10 +9,17 @@ radiating from the horizon and a layer of film grain.
 
 ## Day cycle
 
-24 vertical slices, one per hour of a representative day (sunrise 06:30,
-sunset 19:30). Regenerate with the preview script below.
+1,440 vertical slices, one per minute, rendered with real sun times via wttr.in.
 
-![day cycle preview](assets/day-cycle.png)
+**Waterloo, Ontario** — 2026-06-27 — sunrise 05:43 / sunset 21:06
+
+![day cycle — Waterloo, Ontario](assets/day-cycle-waterloo.png)
+
+**Auckland** — 2026-06-27 — sunrise 07:34 / sunset 17:13
+
+![day cycle — Auckland](assets/day-cycle-auckland.png)
+
+Regenerate with the preview script below.
 
 ## Usage
 
@@ -44,9 +51,13 @@ back to a clear-day gradient.
 ```sh
 vp install
 
-# regenerate the day-cycle preview (assets/day-cycle.png)
-vp dlx esbuild scripts/preview.ts --bundle --platform=node --format=esm \
-  --external:sharp --outfile=scripts/.preview.mjs && node scripts/.preview.mjs
+# regenerate the day-cycle preview for a location (defaults to Waterloo+Ontario)
+vp dlx esbuild scripts/preview-1440.ts --bundle --platform=node --format=esm \
+  --external:sharp --outfile=scripts/.preview-1440.mjs \
+  && node scripts/.preview-1440.mjs "Waterloo+Ontario"
+
+# or for another location (e.g. Auckland)
+node scripts/.preview-1440.mjs Auckland
 
 # render a full sheet of phases / day-walk / sRGB-vs-OKLCH to /tmp for eyeballing
 vp dlx esbuild scripts/render-test.ts --bundle --platform=node --format=esm \
